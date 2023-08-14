@@ -8,7 +8,7 @@ import random
 
 def main():
     level = get_level()
-    num_quest = 3
+    num_quest = 10
     tries = 3
     # prompt user to solve questions
     score = 0
