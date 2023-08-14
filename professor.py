@@ -58,11 +58,12 @@ def get_level():
         num_list = [1, 2, 3]
         try:
             n = int(input("Level: ").strip())
+            if n in num_list:
+                return n
+
         except ValueError:
             pass
 
-        if n in num_list:
-            return n
 
 
 def generate_integer(level):
