@@ -5,7 +5,6 @@ After 10 questions, program will spit out a score
 """
 import random
 
-
 def main():
     level = get_level()
     num_quest = 10
@@ -21,8 +20,6 @@ def main():
         print(f"{x} + {y} = ", end="")
         ans = int(input().strip())
         correct = x + y
-        if ans != correct:
-            raise Exception()
         j = 1
         while j <= tries:
             try:
@@ -46,7 +43,6 @@ def main():
         questions +=1
         if questions == num_quest:
             break
-
 
     print(f"Score: {score}")
 
