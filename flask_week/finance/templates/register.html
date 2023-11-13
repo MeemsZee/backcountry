@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<p>
+    <form method="post">
+        <ul><input autocomplete="off", type="text", name="username", placeholder="Username"></ul>
+        <ul><input autocomplete="off", type="text", name="password", placeholder="Password"></ul>
+        <ul><input autocomplete="off", type="text", name="password_confirm", placeholder="Confirm Password"></ul>
+        <ul><button type="submit">Submit</button></ul>
+    </form>
+</p>
+{% endblock %}
