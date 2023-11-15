@@ -23,6 +23,8 @@ Session(app)
 con = sqlite3.connect("finance.db", check_same_thread=False)
 db = con.cursor()
 
+current_time = datetime.now()
+
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -31,36 +33,54 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 @login_required
 def index():
-    query_1= db.execute("SELECT username, cash FROM users WHERE id = ?;", (session["user_id"],))
-    username, cash = list(query_1.fetchone())
+    if request.method == "POST":
+        try:
+            add_cash = int(request.form.get("cash"))
+            if add_cash < 0:
+                return apology("Please provide a positive number")
+        
+            query = db.execute("SELECT cash FROM users WHERE id =?;", (session["user_id"],))
+            current_cash = list(query.fetchone())[0]
 
-    query_2= db.execute("SELECT transaction_type, stock_symbol, SUM(qty) FROM transactions WHERE user_id = ? GROUP BY stock_symbol;", (session["user_id"],))
-    holdings = query_2.fetchall()
+            new_amt = current_cash + add_cash
+            db.execute("UPDATE users SET cash = ? WHERE id = ?", (new_amt, session["user_id"],))
+            con.commit()
 
-    holdings_dict = {}
-    holdings_info = []
+        except ValueError:
+            return apology("Please provide a postive number")
 
-    for holding in holdings:
-        holdings_dict["transaction_type"] = holding[0]
-        holdings_dict["stock_symbol"] = holding[1].upper()
-        holdings_dict["qty"] = holding[2]
-        symbol_price = lookup(holdings_dict["stock_symbol"])["price"]
-        holdings_dict["stock_price"] = symbol_price
-        holdings_dict["holding_value"] = round(holdings_dict["qty"] * symbol_price, 2)
-        holdings_info.append(holdings_dict.copy())
+        return render_template("success.html")
 
-    holdings_value = 0
+    else:
 
-    for item in holdings_info:
-       holdings_value += item["holding_value"]
+        query_1= db.execute("SELECT username, cash FROM users WHERE id = ?;", (session["user_id"],))
+        username, cash = list(query_1.fetchone())
 
-    grand_total_value = holdings_value + cash
+        query_2= db.execute("SELECT stock_symbol, SUM(qty) FROM transactions WHERE user_id = ? GROUP BY stock_symbol;", (session["user_id"],))
+        holdings = query_2.fetchall()
 
-    return render_template("index.html", user=username, holdings=holdings_info, cash_balance=cash, total_value=grand_total_value)
+        holdings_dict = {}
+        holdings_info = []
+
+        for holding in holdings:
+            holdings_dict["stock_symbol"] = holding[0].upper()
+            holdings_dict["qty"] = holding[1]
+            symbol_price = lookup(holdings_dict["stock_symbol"])["price"]
+            holdings_dict["stock_price"] = symbol_price
+            holdings_dict["holding_value"] = round(holdings_dict["qty"] * symbol_price, 2)
+            holdings_info.append(holdings_dict.copy())
+
+        holdings_value = 0
+
+        for item in holdings_info:
+            holdings_value += item["holding_value"]
+
+        grand_total_value = round(holdings_value + cash, 2)
+
+        return render_template("index.html", user=username, holdings=holdings_info, cash_balance=cash, total_value=grand_total_value)
 
 
 @app.route("/buy", methods=["GET", "POST"])
@@ -68,9 +88,13 @@ def index():
 def buy():
     if request.method == "POST":
         symbol = request.form.get("symbol")
+        if len(symbol) == 0:
+            return apology("Must Provide Ticker")
+        
         stock_quote = lookup(symbol)
+
         if stock_quote == None:
-            return apology("Stock symbol doesn't exist", 404)
+            return apology("Stock symbol doesn't exist")
 
         try:
             shares = int(request.form.get("shares"))
@@ -88,8 +112,6 @@ def buy():
             return apology("Insufficient Funds For This Transaction")
         else: 
             new_cash_amt = current_cash_amt - transaction_cost
-
-        current_time = datetime.now()
      
         db.execute("INSERT INTO transactions (user_id, created_on, transaction_type, stock_symbol, qty, transaction_cost) VALUES(?, ?, ? , ? , ?, ?)", (session["user_id"], current_time, 'BUY', symbol, shares, transaction_cost))
         con.commit()
@@ -106,8 +128,22 @@ def buy():
 @app.route("/history")
 @login_required
 def history():
-    """Show history of transactions"""
-    return apology("TODO")
+    query = db.execute("SELECT created_on, transaction_type, stock_symbol, qty FROM transactions WHERE user_id = ? ORDER BY created_on DESC;", (session["user_id"],))
+    all_trades = query.fetchall()
+
+    history_dict = {}
+    history_list = []
+
+ 
+    for trade in all_trades:
+        history_dict["type"] = trade[1]
+        history_dict["stock_symbol"] = trade[2].upper()
+        history_dict["qty"] = abs(trade[3])
+        history_dict["datetime"] = trade[0].split(".")[0]
+        history_list.append(history_dict.copy())
+   
+
+    return render_template("history.html", trades=history_list)
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -172,9 +208,13 @@ def logout():
 def quote():
     if request.method == "POST":
         symbol = request.form.get("symbol")
+        if len(symbol) == 0:
+            return apology("Must Provide Ticker")
+        
         stock_quote = lookup(symbol)
         if stock_quote == None:
-            return apology("Stock symbol doesn't exist", 404)
+            return apology("Stock symbol doesn't exist")
+        
  
         return render_template("quoted.html", quote=stock_quote)
     return render_template("quote.html")
@@ -185,12 +225,16 @@ def register():
     if request.method == "POST":
         username = request.form.get("username").lower().strip()
         password = request.form.get("password").strip()
-        password_confirm = request.form.get("password_confirm").strip()
+        password_confirm = request.form.get("confirmation").strip()
         query_cur = db.execute("SELECT username FROM users WHERE username = ?;", (username,))
         users_query = query_cur.fetchall()
 
         if len(username) == 0 or " " in username  or len(users_query) != 0: 
             return apology("Invalid username or username unavailable")
+        if len(password) == 0: 
+            return apology("Password Required")
+        if len(password_confirm) == 0: 
+            return apology("Please re-confirm password")
         if password != password_confirm:
             return apology("Passwords must match")
         db.execute("INSERT INTO users (username, hash) VALUES (?,?);", (username, generate_password_hash(password)))
@@ -201,15 +245,59 @@ def register():
 
         session["user_id"] = user_id[0]
 
-
         return redirect("/")
         
     else:
         return render_template("register.html")
-    # return apology("TODO")
+
 
 
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
 def sell():
-    return render_template("sell.html")
+    stock_query = db.execute("SELECT stock_symbol, SUM(qty) FROM transactions WHERE user_id = ? GROUP BY stock_symbol;", (session["user_id"],))
+    stocks = stock_query.fetchall()
+    stock_list = []
+    stock_dict = {}
+    stock_info = []
+
+    for stock in stocks:
+        stock_dict["stock_symbol"] = stock[0]
+        stock_list.append(stock[0])
+        stock_dict["qty"] = stock[1]
+        stock_info.append(stock_dict.copy())
+
+    if request.method == "POST":
+
+        s_symbol = request.form.get("symbol")
+        sell_qty = int(request.form.get("shares"))
+        
+        if s_symbol not in stock_list:
+            return apology("You do not own this stock")
+       
+        
+        for stock in stock_info:
+             if stock["stock_symbol"] == s_symbol:
+                 stock_qty = stock["qty"]
+
+        if sell_qty > stock_qty:
+            return apology(f"You do no own this many shares of {s_symbol}")
+        
+        sell_qty = -sell_qty
+        sell_price = round((lookup(s_symbol)["price"] * sell_qty), 2)
+        
+        db.execute("INSERT INTO transactions (user_id, created_on, transaction_type, stock_symbol, qty, transaction_cost) VALUES(?, ?, ? , ? , ?, ?)", (session["user_id"], current_time, 'SELL',s_symbol, sell_qty, sell_price))
+        con.commit()
+
+        query = db.execute("SELECT cash FROM users where id=?;", (session["user_id"],))
+        cash_amt = list(query.fetchone())[0]
+
+        new_cash_amt = cash_amt - sell_price
+
+        db.execute("UPDATE users SET cash = ? WHERE id = ?", (new_cash_amt, session["user_id"],))
+        con.commit()
+        
+        return redirect("/")
+
+    else:
+        return render_template("sell.html", stocks = stock_list)

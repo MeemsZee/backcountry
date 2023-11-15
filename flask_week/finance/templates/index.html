@@ -2,8 +2,6 @@
 
 {% block main %}
 
-<!--Show name of user, which stocks user owns, number of shares owned , current stock price of each stock and total value of each holding
-user's current cash balance, grand total (value plus cash)-->
 <h1>Summary for {{ user }}</h1>
 <br>
 <table class="table">
@@ -20,8 +18,8 @@ user's current cash balance, grand total (value plus cash)-->
         <tr>
             <td> {{ holding["stock_symbol"] }} </td> 
             <td> {{ holding["qty"] }} </td>
-            <td> ${{ holding["stock_price"] }} </td>
-            <td> ${{ holding["holding_value"] }}</td>
+            <td> {{ holding["stock_price"] |usd }} </td>
+            <td> {{ holding["holding_value"] | usd}}</td>
         </tr>
         {% endfor %}
     </tbody>
@@ -32,14 +30,27 @@ user's current cash balance, grand total (value plus cash)-->
 <table class="table">
     <thead>
         <tr>
-            <th> Cash Available</th>
+            <th> Cash Available
+            </th>
             <th> Total Net Value </th>
         </tr>
     </thead>    
     <tbody>
         <tr>
-            <td> ${{ cash_balance }} </td> 
-            <td> ${{ total_value }} </td>
+            <td> {{ cash_balance |usd }} 
+            </td> 
+            <td> ${{ total_value |usd}} </td>
+        </tr>
+        <tr>
+            <td>    
+                <form method="post">
+                    <input type="text", name="cash", placeholder="Cash Amount">
+                    <button type="submit">Add Cash To Account</button>
+                </form>
+        </button>
+            </td> 
+
+        </tr>
     </tbody>
 </table>
 {% endblock %}

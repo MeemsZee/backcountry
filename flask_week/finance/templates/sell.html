@@ -3,7 +3,12 @@
 {% block main %}
 <p>
     <form method="post">
-        <input type="text", name="symbol", placeholder="Stock Symbol">
+        <select type="text", name="symbol", placeholder="Stock Symbol">
+            <option disabled selected>Stock</option>
+            {% for stock in stocks %}
+            <option value="{{ stock }}"> {{ stock }}</option>
+
+            {% endfor %}
         <input type="number", name="shares", placeholder="Number of Shares">
         <button type="submit">SELL</button>
     </form>
