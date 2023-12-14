@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+
+    <p>
+        <form method="post">
+            <ul>
+                <select type="text", name="category", placeholder="Category">
+                <option disabled selected>Category</option>
+                {% for category in categories %}
+                <option value="{{ category }}"> {{ category }}</option>
+    
+                {% endfor %}
+                </select>
+            </ul>
+            <ul><input class="input-single", type="text", name="title", placeholder="Subject Title"></ul>
+            <ul><input class="input-single", type="text", name="tags", placeholder="Tags"></ul>
+            <ul><div id="editor"></div></ul>
+            <ul><button type="submit">Submit</button></ul>
+        </form>
+    </p>
+<script>
+    const Editor = toastui.Editor;
+    const editor = new Editor({
+        el: document.querySelector('#editor'),
+        usageStatistics: false,
+        height: '500px',
+        initialEditType: 'markdown',
+        previewStyle: 'vertical',
+        hideModeSwitch: true,
+        placeholder: "Enter blog content",
+        autofocus: false,
+    });
+
+    editor.getMarkdown();
+  
+    editor.on('change', function(event) {
+      description = document.getElementById("content");
+      description.value = editor.getMarkdown();
+    });
+  
+  </script>
+{% endblock %}

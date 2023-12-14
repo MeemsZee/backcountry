@@ -1,12 +1,10 @@
 {% extends "layout.html" %}
 
 {% block main %}
-<p>
     <form method="post">
-        <ul><input autocomplete="off", type="text", name="username", placeholder="Username"></ul>
-        <ul><input autocomplete="off", type="text", name="password", placeholder="Password"></ul>
-        <ul><input autocomplete="off", type="text", name="confirmation", placeholder="Confirm Password"></ul>
-        <ul><button type="submit">Submit</button></ul>
+        <div class="mb-3"><input autocomplete="off" autofocus class="form-control mx-auto w-auto" type="text" name="username" placeholder="Username"></div>
+        <div class="mb-3"><input autocomplete="off" autofocus class="form-control mx-auto w-auto" type="text" name="password" placeholder="Password"></div>
+        <div class="mb-3"><input autocomplete="off", type="text", name="confirmation", placeholder="Confirm Password"></div>
+        <div class="text-center"><button class="btn btn-primary" type="submit">Submit</button></div>
     </form>
-</p>
 {% endblock %}

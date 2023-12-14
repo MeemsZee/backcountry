@@ -1,0 +1,98 @@
+body {
+    background-color:#D8E6F3;
+    background-size: cover;
+}
+
+.nav-link {
+    font-size: 1.1rem;
+    padding-right: 3rem !important;
+    color: #4B4C54;
+}
+.navbar-brand {
+
+    padding-right: 7rem !important;
+}
+#insta-logo{
+    width: 1.35rem ;
+    height: 1.35rem;
+}
+
+#background-index {
+    position: relative;
+    height: 100vh;
+    display: grid;
+    padding: 50px;
+    bottom: 0;
+
+}
+
+#background-index::before {
+    content: '';
+    background-image: url("background.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    inset: 0;
+    position:absolute;
+    opacity: 0.8;
+    background-color: black;
+
+}
+
+.navbar {
+    background: linear-gradient(to right,#D8E6F3 0%, #A7BBCD 100%);
+}
+
+.content-index {
+    color: #081168;
+    text-align: center;
+    isolation: isolate;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 4rem;
+    margin-top: 5rem;
+}
+
+.content-header {
+    color: #081168;
+    text-align: center;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: 4rem;
+    margin-top: 2rem;
+}
+
+.content-body {
+    color: #081168;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin-top: 2rem;
+    margin-left: 15rem;
+    margin-right:15rem;
+    font-size: 1.2rem;
+    text-align: justify;
+    text-justify: inter-word;
+}
+.pic {
+    display: block;
+    max-width: 20%;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2rem;
+
+}
+
+input, button{ 
+    border-radius: .2rem;
+}
+
+.input-single {
+    width: 85rem;
+}
+
+#editor {
+    width: 85rem;
+    border-radius: .2rem;
+    background-color: white;
+}
+
