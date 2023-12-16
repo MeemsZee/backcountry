@@ -17,6 +17,8 @@
             </ul>
             <ul><input class="input-single", type="text", name="title", placeholder="Subject Title"></ul>
             <ul><input class="input-single", type="text", name="tags", placeholder="Tags"></ul>
+            <ul><input class="input-single", type="text", name="pic", placeholder="Pic Path"></ul>
+            <ul><input id="content" type="hidden", name="content"></ul>
             <ul><div id="editor"></div></ul>
             <ul><button type="submit">Submit</button></ul>
         </form>
@@ -33,12 +35,10 @@
         placeholder: "Enter blog content",
         autofocus: false,
     });
-
-    editor.getMarkdown();
   
     editor.on('change', function(event) {
-      description = document.getElementById("content");
-      description.value = editor.getMarkdown();
+      postContent = document.getElementById("content");
+      postContent.value = editor.getMarkdown();
     });
   
   </script>

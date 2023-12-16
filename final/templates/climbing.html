@@ -1,5 +1,17 @@
 {% extends "layout.html" %}
 
 {% block main %}
-Where should people climb? What is it like there? 
+<div class="main-post">
+        {% for post in posts %}
+            <div class="post-box">
+                <p class="title">
+                    <a href="{{ url_for('climb_post', post_id=post.id) }}">{{ post.title }}</a>
+                </p>
+                {% if post.pic_path !=None %}
+                    <p>{{ post.pic_path}}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    
+</div>
 {% endblock %}

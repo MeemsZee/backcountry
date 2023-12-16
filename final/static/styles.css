@@ -96,3 +96,23 @@ input, button{
     background-color: white;
 }
 
+.post-box {
+    flex: 20%;
+    padding: 1rem;
+    margin: 1rem;
+    background-color: #d3e0ed;
+    text-align: center;
+    writing-mode: horizontal-tb;
+}
+
+.main-box{
+    margin: 5px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+a:link {
+    color: black;
+}
+
