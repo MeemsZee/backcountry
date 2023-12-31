@@ -52,7 +52,7 @@ def index():
         except ValueError:
             return apology("Please provide a postive number")
 
-        return render_template("success.html")
+        return render_template("success.html") 
 
     else:
 

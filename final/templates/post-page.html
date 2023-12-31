@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<div class="post-main">
+        <h2> {{ post.title }} </p>
+        <div class="post">{{ html_content|safe }} </div>
+    
+</div>
+{% endblock %}
