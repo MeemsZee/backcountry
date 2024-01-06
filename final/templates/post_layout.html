@@ -6,16 +6,16 @@
   
         {% for post in posts %}
          <div  class="post-box">
-            <!-- <p>
+            <p>
                 {% if post.pic_path !=None  and post.pic_path !="" %}
                 <img class="post-thumbnail" src="{{ post.pic_path}}" alt="post-main-pic">
                 {% endif %}
-            </p> -->
+            </p>
             <p>
                 <a class="link-post" href="{{ url_for('all_post', post_id=post.id) }}">{{ post.title }}</a>
             </p>
             <hr>
-            <p class="truncate">{{ post.content }}</p>
+            <p>{{ post.truncated_content }} ...</p>
 
         </div>
         {% endfor %}

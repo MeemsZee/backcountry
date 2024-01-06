@@ -199,10 +199,10 @@ input, button{
     }
 
 .post-box {
-    border: .05rem solid rgb(119, 118, 118); 
+    /* border: .05rem solid rgb(119, 118, 118);  */
     border-radius: .25rem;
     max-width: 30rem;
-    padding: 1rem;
+    /* padding: 1rem; */
 }
 
 .main-body {
@@ -231,8 +231,10 @@ a[href="post_layout.html"] {
 }
 
 .post-thumbnail {
-    height: 20%;
-    width: 20%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: .25rem;
 }
 
 #logout {
@@ -252,14 +254,6 @@ h2 {
     text-align: center;
     color:#4B4C54;
     
-}
-.truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-            line-clamp: 2;
-    -webkit-box-orient: vertical;
 }
 
 img {

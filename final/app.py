@@ -72,7 +72,8 @@ def cooking():
 
 @app.route("/climbing")
 def climbing():
-    climbing_posts = Post.query.filter_by(category='Climbing').all()
+    climbing_posts = Post.query.filter_by(category='Climbing').with_entities(Post.id, Post.title, func.substr(Post.content, 1, 100).label('truncated_content'), Post.pic_path).all()
+    print(climbing_posts)
     return render_template("climbing.html", posts=climbing_posts)
 
 @app.route("/post_<int:post_id>/")
