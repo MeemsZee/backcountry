@@ -28,6 +28,7 @@ The file website.db has two tables: user and posts.
 
 * def trailer(), def cooking(), def climbing(): 
     * queries into database to filter all entries by their respective category and stored as a list
+    * .with_entities(*kargs) - SQLAlchemy - it allows to query specific columns
     * once list is populated, the respective html page will be rendered
 
 * def all_post(post_id):
@@ -110,15 +111,13 @@ there are 3 boxes with links to other pages and a quick description of the conte
 * Backcountry series website to be up and running
     * The domain name has been bought. 
     * Figure out which service to use in order to host the website.  Should be a free one since storage for the time being isn't large
-* Optimize list of posts pages:
-    * loading time is an issue since all the contents are loaded to the page, but is hidden via the truncation
-    * Should the Post table include a truncated version of the content? currently with the layout, it may be the most viable method, unless there is a way to append to each entry after querying all posts
 * Redirecting after creating a post to the post page.  Currently it redirects to the index.  Not the biggest deal since it is on the admin side and not user
-* Update the login page to show errors if password or username is incorrect
 * Register page - Create errors letting client knows if there are any issues
 * See if adding a thumbnail photo for each post listing makes the page look put together. Or at least find a way to make it look better.  Figure out how to crop pics to fit into the listing's width
 * Change the css for post pages to make content look better. 
     * Right now the photos and the words of the posts aren't the most asthetically pleasing.
 * Make sure User table has only unique users.  I have done this before in the past. Should be easy to do. 
 * Make the category tab show the actual category of the post on edit pages.  Right now you have to pick the category all over again. 
+* Find a way to log errors
+* Log number of visitors
 

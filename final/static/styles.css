@@ -271,3 +271,8 @@ img {
 .post-main {
     margin: 2rem;
 }
+
+.error {
+    text-align: center;
+    color: rgb(213, 25, 25);
+}

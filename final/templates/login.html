@@ -14,10 +14,14 @@
         </div>
     </form>
 
-    <br><br>
+    <br>
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
 
-    <div class="text-center">
+    <!-- Register is for the future of the project
+        <div class="text-center">
         <a href="/register">Register</a>
-    </div>
+    </div> -->
 
 {% endblock %}

@@ -62,18 +62,18 @@ def backcountry():
 
 @app.route("/trailer_tips")
 def trailer():
-    trailer_posts = Post.query.filter_by(category='Trailer').all()
+    trailer_posts = Post.query.filter_by(category='Trailer').with_entities(Post.id, Post.title, func.substr(Post.content, 1, 100).label('truncated_content'), Post.pic_path).all()
     return render_template("trailer_tips.html", posts=trailer_posts)
 
 @app.route("/cooking")
 def cooking():
-    cooking_posts = Post.query.filter_by(category='Cooking').all()
+    cooking_posts = Post.query.filter_by(category='Cooking').with_entities(Post.id, Post.title, func.substr(Post.content, 1, 100).label('truncated_content'), Post.pic_path).all()
+    
     return render_template("cooking.html", posts=cooking_posts)
 
 @app.route("/climbing")
 def climbing():
     climbing_posts = Post.query.filter_by(category='Climbing').with_entities(Post.id, Post.title, func.substr(Post.content, 1, 100).label('truncated_content'), Post.pic_path).all()
-    print(climbing_posts)
     return render_template("climbing.html", posts=climbing_posts)
 
 @app.route("/post_<int:post_id>/")
@@ -144,6 +144,7 @@ def editable():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    error = None
     # Forget any user_id
     session.clear()
     if request.method == "POST":
@@ -158,10 +159,11 @@ def login():
         user = User.query.filter_by(username=username).first()
         if username == 'admin-mimi' and check_password_hash(user.password, password):
             session['username'] = user.username
-  
-        return redirect("/garage")
+            return redirect("/garage")
+        else:
+            error = "Username and/or password incorrect"
         
-    
+        return render_template('login.html', error=error)
     return render_template("login.html")
 
 
