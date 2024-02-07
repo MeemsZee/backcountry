@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block main %}
+{% if session['username'] %}
+
+<div class="nav-item" id="logout"><a class="nav-link" href="/logout">Log Out</a></div>
+<div class="main-body">
+       {% for post in posts %}
+         <div  class="post-box">
+            <p class="editable-content">
+                {% if post.pic_path !=None  and post.pic_path !="" %}
+                <img class="post-thumbnail" src="{{ post.pic_path}}" alt="post-main-pic">
+                {% endif %}
+            </p>
+            <p class="editable-content">   
+                <a href="{{ url_for('all_post', post_id=post.id) }}">{{ post.title }}</a>
+            </p> 
+            <p class="editable-content">
+                <a href="{{ url_for('edit', post_id=post.id) }}">Edit</a>
+            </p>
+            <p class="editable-content">
+                <form method="POST"
+                        action="{{ url_for('delete', post_id=post.id) }}">
+                    <input type="submit" value="Delete Post"
+                        onclick="return confirm('Are you sure you want to delete this entry?')">
+                </form>
+            </p>
+        </div>  
+        {% endfor %}
+    
+    {% block content %}{% endblock %}
+</div>
+{% endif %}
+{% endblock %} 

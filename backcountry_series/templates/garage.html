@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block main %}
+{% if session['username'] %}
+<div class="nav-item" id="logout"><a class="nav-link" href="/logout">Log Out</a></div>
+<div class="post-form">
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <p>
+        <form method="post">
+            <ul>
+                <select type="text", name="category", placeholder="Category">
+                <option disabled selected>Category</option>
+                {% for category in categories %}
+                <option value="{{ category }}"> {{ category }}</option>
+    
+                {% endfor %}
+                </select>
+            </ul>
+            <ul><input class="input-single", type="text", name="title", placeholder="Subject Title"></ul>
+            <ul><input class="input-single", type="text", name="tags", placeholder="Tags"></ul>
+            <ul><input class="input-single", type="text", name="pic", placeholder="Pic Path"></ul>
+            <ul><input id="content" type="hidden", name="content", placeholder="Content"></ul>
+            <ul><div id="editor"></div></ul>
+            <ul><button type="submit">Submit</button></ul>
+        </form>
+    </p>
+</div>
+{% else %}
+    <a class="nav-link" href="/login">Login</a>
+{% endif %}
+<script>
+    const Editor = toastui.Editor;
+    const editor = new Editor({
+        el: document.querySelector('#editor'),
+        usageStatistics: false,
+        height: '500px',
+        initialEditType: 'markdown',
+        previewStyle: 'vertical',
+        hideModeSwitch: true,
+        placeholder: "Enter blog content",
+        autofocus: false,
+    });
+  
+    editor.on('change', function(event) {
+      postContent = document.getElementById("content");
+      postContent.value = editor.getMarkdown();
+    });
+  
+  </script>
+
+{% endblock %}

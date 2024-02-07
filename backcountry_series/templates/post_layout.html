@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block main %}
+{% block content %}{% endblock %}
+<div class="main-body">
+  
+        {% for post in posts %}
+         <div  class="post-box">
+            <p class="post-layout">
+                {% if post.pic_path !=None  and post.pic_path !="" %}
+                <img class="post-thumbnail" src="{{ post.pic_path}}" alt="post-main-pic">
+                {% endif %}
+            </p>
+            <p class="post-title">
+                <a class="link-post" href="{{ url_for('all_post', post_id=post.id) }}">{{ post.title }}</a>
+            </p>
+            <hr>
+            <p class="post-layout">{{ post.truncated_content }} ...</p>
+
+        </div>
+        {% endfor %}
+
+</div>
+
+
+{% endblock %}
