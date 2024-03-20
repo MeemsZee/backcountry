@@ -1,5 +1,4 @@
 # Backcountry Series Website
-#### Video Demo:  <https://youtu.be/l7BFuzGwEwI>
 #### Description: Create blog like website for campers and climbers
 
 #### Purpose of website
